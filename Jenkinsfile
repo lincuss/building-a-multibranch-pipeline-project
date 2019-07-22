@@ -22,5 +22,28 @@ pipeline {
                 sh './jenkins/scripts/test.sh'
             }
         }
+
+        stage('cd for dev') {
+            when {
+                branch 'development' 
+            }
+
+            steps {
+                sh './jenkins/scripts/deliver-for-development.sh'
+                input message : 'finished using the website?'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
+
+        stage('cd for prod') {
+            when {
+                branch 'production'
+            }
+            steps {
+                sh './jenkins/scripts/deploy-for-production.sh'
+                input message : 'are u ok go ?'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
     }
 }
